@@ -40,7 +40,6 @@ customerController.login = async (req, res, next) => {
     }
     customer.isPasswordMatch(password, customer.password, (err, matched) => {
       if (matched) {
-        // return res.send("you may login");
         const secret = process.env.SECRET;
         const expire = process.env.EXPIRE;
 
