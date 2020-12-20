@@ -4,21 +4,26 @@
   "description": "bread-points server, bp is a service to be able to keep credit and pay per QR Code",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon src/server",
-    "start": "node src/server"
+    "dev": "cross-env NODE_ENV=development nodemon src/server",
+    "start": "cross-env NODE_ENV=production node src/server"
   },
   "author": "Majd Hasan",
   "license": "MIT",
   "dependencies": {
+    "connect-mongo": "^3.2.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "moment": "^2.29.1",
     "mongoose": "^5.11.8",
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.0",
+    "passport-session": "^1.0.2"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.6"
   }
 }
