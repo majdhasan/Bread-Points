@@ -1,51 +1,35 @@
 const express = require('express');
 require('dotenv').config();
-const mongoose = require('mongoose');
 const logger = require('morgan');
 const cors = require('cors');
 const passport = require('passport');
 
+const connectDB = require('./config/db');
 const clientV1 = require('./routes/clientV1');
 const shopV1 = require('./routes/shopV1');
 
-const port = process.env.PORT || 5000;
-
+// ------------ Initialize Express --------------//
 const app = express();
 
-// ------------ DB Config --------------//
-mongoose.set('useCreateIndex', true);
-mongoose.set('useFindAndModify', false);
+// ------------ Connect to MONGODB --------------//
+connectDB();
 
-mongoose.connect(
-  process.env.URI,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  (err) => {
-    err
-      ? console.log(err)
-      : console.log('Successfuly connected to the database');
-  },
-);
-
-// ------------ Middleware --------------//
+// ---------------- Middleware -----------------//
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());
-// require("./config/passport")(passport);
+// require('./config/passport.js')(passport);
 
-// ------------ Routes --------------//
+// ----------------- Routes -------------------//
 app.use('/api/client/v1', clientV1);
 app.use('/api/shop/v1', shopV1);
 
-// ------------ Errors --------------//
+// ------------ Error Handling --------------//
 
 app.use((req, res, next) => {
-  //404 Not Found
   const err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -60,6 +44,11 @@ app.use((err, req, res, next) => {
   });
 });
 
+// --------------- Start Server -------------- //
+const port = process.env.PORT || 5000;
+
 app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}`);
+  console.log(
+    `Server started in ${process.env.NODE_ENV} on http://localhost:${port}`,
+  );
 });
