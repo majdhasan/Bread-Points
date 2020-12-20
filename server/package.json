@@ -4,7 +4,8 @@
   "description": "bread-points server, bp is a service to be able to keep credit and pay per QR Code",
   "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/server",
+    "start": "node src/server"
   },
   "author": "Majd Hasan",
   "license": "MIT",
@@ -14,5 +15,8 @@
     "express": "^4.17.1",
     "mongoose": "^5.11.8",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
   }
 }
