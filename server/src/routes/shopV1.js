@@ -2,15 +2,16 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const shopController = require('../controllers/shop.controller');
+const orderController = require('../controllers/order.controller');
 
 // -------------------- Public Routes ----------//
 
 router.post('/register', shopController.register);
 router.post('/auth', shopController.login);
 
-// ------------ Unfound Route Handler ----------//
+// ------------ Restricted Route Handler ----------//
 router.all('*', (req, res, next) => {
-  passport.authenticate('shop-rule', { session: false }, (err, shop) => {
+  passport.authenticate('shop-local-rule', { session: false }, (err, shop) => {
     if (err || !shop) {
       const error = new Error('You are not authorized to access this path');
       error.status = 401;
@@ -23,5 +24,8 @@ router.all('*', (req, res, next) => {
 
 // -------------------- Restricted Routes ----------//
 router.get('/me', shopController.me);
+
+router.post('/order', orderController.create);
+router.get('/order', orderController.get);
 
 module.exports = router;
