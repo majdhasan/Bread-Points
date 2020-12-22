@@ -9,10 +9,10 @@ const customerController = require('../controllers/customer.controller');
 router.post('/register', customerController.register);
 router.post('/auth', customerController.login);
 
-// ------------ Unfound Route Handler ----------//
+// ------------ Restricted Route Handler ----------//
 router.all('*', (req, res, next) => {
   passport.authenticate(
-    'customer-rule',
+    'customer-local-rule',
     { session: false },
     (err, customer) => {
       if (err || !customer) {
