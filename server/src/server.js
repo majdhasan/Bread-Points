@@ -2,9 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const logger = require('morgan');
 const cors = require('cors');
-const passportCustomer = require('passport');
-const passportShop = require('passport');
-
+const passport = require('passport');
 const connectDB = require('./config/db');
 const clientV1 = require('./routes/clientV1');
 const shopV1 = require('./routes/shopV1');
@@ -19,13 +17,13 @@ connectDB();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(passportCustomer.initialize());
-app.use(passportCustomer.session());
-app.use(passportShop.initialize());
-app.use(passportShop.session());
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(cors());
-require('./config/customer.passport')(passportCustomer);
-require('./config/shop.passport')(passportShop);
+
+// -------- Passport Strategies bining -----------//
+require('./config/passport')(passport);
 
 // ----------------- Routes -------------------//
 app.use('/api/client/v1', clientV1);
