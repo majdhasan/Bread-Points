@@ -1,8 +1,24 @@
+/**
+ * @author Majd Hasan
+ */
+
 const Transaction = require('../models/transaction.model');
+const Customer = require('../models/customer.model');
+const Shop = require('../models/shop.model');
 
 const transactionController = {};
 
 transactionController.create = async (req, res, next) => {
+  /**
+   * @description:
+   *
+   * In this section we are going to handle the creation of a new transaction
+   * There are 3 types of Transactions:
+   * 1- Charge: in this type the issuer is a shop that wants to charge balance for a customer
+   * 2- Payment: in the type the issuer is a customer, that wants to pay an open order
+   * 3- reimbursment: in this type the issuer is a shop that will give back part or all of the balance of a customer back
+   *                  to the customer in cash
+   */
   const { amount, order, receiverId, type } = req.body;
   const transactionMembersDetails = {};
 
@@ -20,16 +36,57 @@ transactionController.create = async (req, res, next) => {
     transactionMembersDetails.receiverModel = 'Customer';
   }
 
-  const newTranscation = new Transaction({
+  const newTransacation = new Transaction({
     amount,
-    ...transactionMembersDetails,
     type,
     order,
+    ...transactionMembersDetails,
   });
 
   try {
-    const transaction = await newTranscation.save();
-    return res.send({ transaction });
+    switch (type) {
+      case 'charge':
+        /**
+         * find receiver and create transaction
+         * add transaction to shop and customer profiles
+         * and update customer balance
+         */
+
+        const user = await Customer.findOne({ _id: receiverId });
+        if (user) {
+          const transaction = await newTransacation.save();
+          user.transactions.push(transaction);
+          user.balance += parseFloat(amount);
+          user.save();
+          const shop = await Shop.findOne({ _id: req.shop._id });
+          console.log(shop);
+          shop.transactions.push(transaction);
+          shop.save();
+          return res.send({ transaction });
+        } else {
+          const err = new Error(
+            `The receiver with id ${receiverId} was not found in our system`,
+          );
+          err.status = 404;
+          return next(err);
+        }
+
+      case 'reimbursement':
+        break;
+      case 'payment':
+        /**
+         * decrease customer balance
+         * decrease order open amount
+         * eventually mark order as paid
+         *
+         *
+         */
+
+        break;
+
+      default:
+        break;
+    }
   } catch (e) {
     next(e);
   }
