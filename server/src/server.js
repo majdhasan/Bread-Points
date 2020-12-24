@@ -4,7 +4,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const passport = require('passport');
 const connectDB = require('./config/db');
-const clientV1 = require('./routes/clientV1');
+const customerV1 = require('./routes/customerV1');
 const shopV1 = require('./routes/shopV1');
 
 // ------------ Initialize Express --------------//
@@ -26,7 +26,7 @@ app.use(cors());
 require('./config/passport')(passport);
 
 // ----------------- Routes -------------------//
-app.use('/api/client/v1', clientV1);
+app.use('/api/customer/v1', customerV1);
 app.use('/api/shop/v1', shopV1);
 
 // ------------ Error Handling --------------//
