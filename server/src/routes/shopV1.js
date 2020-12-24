@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const shopController = require('../controllers/shop.controller');
 const orderController = require('../controllers/order.controller');
+const transactionController = require('../controllers/transaction.controller');
 
 // -------------------- Public Routes ----------//
 
@@ -27,5 +28,8 @@ router.get('/me', shopController.me);
 
 router.post('/order', orderController.create);
 router.get('/order', orderController.get);
+
+router.post('/transaction', transactionController.create);
+router.get('/transaction', transactionController.get);
 
 module.exports = router;
