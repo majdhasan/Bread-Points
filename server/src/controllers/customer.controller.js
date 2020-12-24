@@ -13,6 +13,7 @@ customerController.register = async (req, res, next) => {
     email,
     password,
     joined,
+    transactions: [],
   });
 
   try {
