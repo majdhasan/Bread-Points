@@ -23,7 +23,7 @@ shopController.register = async (req, res, next) => {
   } catch (e) {
     console.log(e);
     if (e.name === 'MongoError' && e.code === 11000) {
-      next(new Error(`Email address ${newShop.email} is already taken`));
+      next(new Error(`Shop name ${newShop.name} is already taken`));
     } else {
       next(e);
     }
