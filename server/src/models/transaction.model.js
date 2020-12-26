@@ -11,7 +11,6 @@ const TransactionSchema = Schema({
   },
   receiver: {
     type: Schema.Types.ObjectId,
-    required: true,
     refPath: 'transactionSide',
   },
   issuerModel: {

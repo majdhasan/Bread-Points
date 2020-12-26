@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 
 const customerController = require('../controllers/customer.controller');
+const transactionController = require('../controllers/transaction.controller');
 
 // -------------------- Public Routes ----------//
 
@@ -27,6 +28,9 @@ router.all('*', (req, res, next) => {
 });
 
 // -------------------- Restricted Routes ----------//
+router.get('/me', customerController.me);
+
+router.post('/transaction', transactionController.create);
 router.get('/me', customerController.me);
 
 module.exports = router;
