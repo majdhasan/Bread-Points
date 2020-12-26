@@ -5,8 +5,9 @@ const { Schema } = mongoose;
 const ShopSchema = Schema({
   name: {
     type: String,
+    unique: true,
   },
-  email: { type: String, require: true, index: true, unique: true },
+  email: { type: String, require: true, index: true },
   password: { type: String, require: true },
   orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
   transactions: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
