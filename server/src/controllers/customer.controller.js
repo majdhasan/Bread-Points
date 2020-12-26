@@ -14,6 +14,7 @@ customerController.register = async (req, res, next) => {
     password,
     joined,
     transactions: [],
+    balance: new Map(),
   });
 
   try {

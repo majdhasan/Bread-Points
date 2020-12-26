@@ -8,7 +8,11 @@ const CustomerSchema = Schema({
   },
   email: { type: String, require: true, index: true, unique: true },
   password: { type: String, require: true },
-  balance: { type: Number, default: 0 },
+  balance: {
+    type: Map,
+    of: Number,
+    default: new Map(),
+  },
   transactions: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
   orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
   joined: { type: Date, default: new Date() },
