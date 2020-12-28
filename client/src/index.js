@@ -1,6 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Provider } from 'react-redux';
 import App from './App';
+import { BrowserRouter } from 'react-router-dom';
+import { onLoadingSignin } from './actions';
+import store from './store';
+import './index.css';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+store.dispatch(onLoadingSignin());
+ReactDOM.render(
+  <BrowserRouter>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </BrowserRouter>,
+  document.getElementById('root'),
+);
