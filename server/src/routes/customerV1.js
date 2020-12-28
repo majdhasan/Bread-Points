@@ -4,6 +4,7 @@ const passport = require('passport');
 
 const customerController = require('../controllers/customer.controller');
 const transactionController = require('../controllers/transaction.controller');
+const orderController = require('../controllers/order.controller');
 
 // -------------------- Public Routes ----------//
 
@@ -29,8 +30,9 @@ router.all('*', (req, res, next) => {
 
 // -------------------- Restricted Routes ----------//
 router.get('/me', customerController.me);
-
 router.post('/transaction', transactionController.create);
-router.get('/me', customerController.me);
+router.get('/transaction', transactionController.getCustomerTransactions);
+
+router.get('/order', orderController.getCustomerOrders);
 
 module.exports = router;

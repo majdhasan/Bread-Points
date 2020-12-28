@@ -30,6 +30,6 @@ router.post('/order', orderController.create);
 router.get('/order', orderController.get);
 
 router.post('/transaction', transactionController.create);
-router.get('/transaction', transactionController.get);
+router.get('/transaction', transactionController.getShopTransactions);
 
 module.exports = router;

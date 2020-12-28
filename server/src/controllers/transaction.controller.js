@@ -1,6 +1,6 @@
 /**
  * @author Majd Hasan
- *
+ * @todo finish the get method for a customer with a specific month
  */
 
 const Transaction = require('../models/transaction.model');
@@ -66,19 +66,49 @@ transactionController.create = async (req, res, next) => {
   }
 };
 
-transactionController.get = async (req, res, next) => {
-  const { transactionId } = req.body;
+transactionController.getCustomerTransactions = async (req, res, next) => {
+  const { customer } = req;
+
+  const query = {
+    issuer: customer._id,
+    // created: {
+    //   $gte: firstDay,
+    //   $lt: lastDay,
+    // },
+  };
 
   try {
-    const transaction = await Transaction.findById(transaction);
-    if (!transaction) {
-      const err = new Error(
-        `The transaction with id ${transactionId} was not found in our system`,
-      );
-      err.status = 404;
-      return next(err);
-    }
-    return res.send({ transaction });
+    const transactions = await Transaction.find(query).sort({
+      created: 'desc',
+    });
+
+    // const transaction = await Transaction.findById(transaction);
+
+    return res.send({ transactions });
+  } catch (e) {
+    next(e);
+  }
+};
+
+transactionController.getShopTransactions = async (req, res, next) => {
+  const { customer } = req;
+
+  const query = {
+    issuer: customer._id,
+    // created: {
+    //   $gte: firstDay,
+    //   $lt: lastDay,
+    // },
+  };
+
+  try {
+    const transactions = await Transaction.find(query).sort({
+      created: 'desc',
+    });
+
+    // const transaction = await Transaction.findById(transaction);
+
+    return res.send({ transactions });
   } catch (e) {
     next(e);
   }
@@ -192,5 +222,54 @@ const payOrder = async (transactionMembersDetails, orderId, amount) => {
     return err;
   }
 };
+
+/**
+ * expenseController.get = async (req, res, next) => {
+  const { user } = req;
+
+  const now = new Date();
+
+  const month = parseInt(req.params.month);
+  {
+    month >= 0 && month <= 11 && now.setMonth(month);
+  }
+
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  const query = {
+    owner: user._id,
+    created: {
+      $gte: firstDay,
+      $lt: lastDay,
+    },
+  };
+
+  try {
+    const expense = await Expense.find(query).sort({ created: 'desc' });
+    const statistics = {};
+
+    if (expense.length > 0) {
+      //Max amount spent in the specified month
+      statistics.max = expense.sort((a, b) => a.amount < b.amount)[0].amount;
+
+      //Total amount spent in the specified month
+      statistics.total = expense
+        .map((item) => item.amount)
+        .reduce((prev, next) => prev + next);
+
+      //Avg expense for the given month
+      statistics.avg = Math.floor(statistics.total / expense.length);
+    }
+
+    return res.send({
+      expense,
+      statistics,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+ */
 
 module.exports = transactionController;

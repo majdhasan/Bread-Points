@@ -59,4 +59,51 @@ orderController.get = async (req, res, next) => {
   }
 };
 
+orderController.getCustomerOrders = async (req, res, next) => {
+  const { customer } = req;
+
+  const query = {
+    customer: customer._id,
+    // created: {
+    //   $gte: firstDay,
+    //   $lt: lastDay,
+    // },
+  };
+
+  try {
+    const orders = await Order.find(query).sort({
+      created: 'desc',
+    });
+
+    if (!orders) {
+      const err = new Error(
+        `The order with id ${orderId} was not found in our system`,
+      );
+      err.status = 404;
+      return next(err);
+    }
+    return res.send({ orders });
+  } catch (e) {
+    next(e);
+  }
+};
+
+orderController.getShopOrders = async (req, res, next) => {
+  const { orderId } = req.body;
+
+  try {
+    const order = await Order.findById(orderId);
+    if (!order) {
+      const err = new Error(
+        `The order with id ${orderId} was not found in our system`,
+      );
+      err.status = 404;
+      return next(err);
+    }
+    return res.send({ order });
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = orderController;
