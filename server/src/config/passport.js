@@ -13,7 +13,6 @@ module.exports = (passport) => {
     'customer-local-rule',
     new JwtStrategy(config, async (jwtPayload, done) => {
       try {
-        console.log('entered');
         const customer = await Customer.findById(jwtPayload._id);
         if (customer) {
           return done(null, customer);
