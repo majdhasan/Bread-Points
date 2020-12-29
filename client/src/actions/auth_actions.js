@@ -7,7 +7,7 @@ import {
 } from './types';
 import { apiLogin, getProfile } from '../api/customer';
 import setAuthHeader from '../api/setAuthHeader';
-const TOKEN_NAME = 'cost_planner_token';
+const TOKEN_NAME = 'bread_points_customer_token';
 
 export const signIn = (reqData) => {
   return async (dispatch) => {
