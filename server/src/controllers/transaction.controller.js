@@ -71,6 +71,7 @@ transactionController.getCustomerTransactions = async (req, res, next) => {
 
   const query = {
     issuer: customer._id,
+
     // created: {
     //   $gte: firstDay,
     //   $lt: lastDay,
@@ -91,10 +92,10 @@ transactionController.getCustomerTransactions = async (req, res, next) => {
 };
 
 transactionController.getShopTransactions = async (req, res, next) => {
-  const { customer } = req;
+  const { shop } = req;
 
   const query = {
-    issuer: customer._id,
+    issuer: shop._id,
     // created: {
     //   $gte: firstDay,
     //   $lt: lastDay,
@@ -114,7 +115,7 @@ transactionController.getShopTransactions = async (req, res, next) => {
   }
 };
 
-const chargeCreditToCustomer = async (transactionMembersDetails, amount) => {
+const chargeCreditToCustomer = async (transactionMembersDetails, credit) => {
   /**
    * find receiver and create transaction
    * add transaction to shop and customer profiles
@@ -122,7 +123,7 @@ const chargeCreditToCustomer = async (transactionMembersDetails, amount) => {
    */
 
   const newTransacation = new Transaction({
-    amount,
+    amount: credit,
     type: 'charge',
     ...transactionMembersDetails,
   });
@@ -134,19 +135,22 @@ const chargeCreditToCustomer = async (transactionMembersDetails, amount) => {
 
   if (customer && shop) {
     const transaction = await newTransacation.save();
-    customer.transactions.push(transaction);
-    shop.transactions.push(transaction);
-    if (customer.balance.has(shop.name)) {
-      const oldBalance = customer.balance.get(shop.name);
-      const newBalance = oldBalance + amount;
-      customer.balance.set(shop.name, newBalance);
+
+    const foundBalanceIndex = customer.balances.findIndex((balance) => {
+      return balance.shop.toString() == transactionMembersDetails.issuer;
+    });
+    console.log(foundBalanceIndex);
+    if (typeof foundBalanceIndex !== 'undefined' && foundBalanceIndex !== -1) {
+      customer.balances[foundBalanceIndex].amount =
+        customer.balances[foundBalanceIndex].amount + credit;
     } else {
-      customer.balance.set(shop.name, amount);
+      const newBalance = { shop, amount: credit };
+      customer.balances.push(newBalance);
     }
 
     await customer.save();
-    await shop.save();
-    const message = `${customer.name} balance from ${shop.name} has been charged with an amount of ${amount}`;
+
+    const message = `${customer.name} balance from ${shop.name} has been charged with an amount of ${credit}`;
     return { message, transaction };
   } else {
     const err = new Error(
@@ -208,10 +212,7 @@ const payOrder = async (transactionMembersDetails, orderId, amount) => {
     });
     const transaction = await newTransacation.save();
     order.transactions.push(transaction);
-    customer.transactions.push(transaction);
-    shop.transactions.push(transaction);
     await customer.save();
-    await shop.save();
     await order.save();
     return { message, transaction };
   } else {

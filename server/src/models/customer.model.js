@@ -2,21 +2,24 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { Schema } = mongoose;
 
+const BalanceSchema = Schema({
+  amount: { type: Number, require: true, default: 0 },
+  shop: { type: Schema.Types.ObjectId, ref: 'Shop' },
+});
+
 const CustomerSchema = Schema({
   name: {
     type: String,
   },
   email: { type: String, require: true, index: true, unique: true },
   password: { type: String, require: true },
-  balance: {
-    type: Map,
-    of: Number,
-    default: new Map(),
-  },
+  balances: [BalanceSchema],
   transactions: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
   orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
   joined: { type: Date, default: new Date() },
 });
+
+// -------------------- Sub-Schema ----------------------
 
 CustomerSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {

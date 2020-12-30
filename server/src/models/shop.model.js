@@ -9,8 +9,6 @@ const ShopSchema = Schema({
   },
   email: { type: String, require: true, index: true },
   password: { type: String, require: true },
-  orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
-  transactions: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
   joined: { type: Date, default: new Date() },
 });
 

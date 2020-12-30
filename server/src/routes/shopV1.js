@@ -27,7 +27,7 @@ router.all('*', (req, res, next) => {
 router.get('/me', shopController.me);
 
 router.post('/order', orderController.create);
-router.get('/order', orderController.get);
+router.get('/order', orderController.getShopOrders);
 
 router.post('/transaction', transactionController.create);
 router.get('/transaction', transactionController.getShopTransactions);
