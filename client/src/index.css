@@ -7,3 +7,17 @@ body {
 .logo-coffee {
   margin-right: 10px;
 }
+
+.paid-sign {
+  font-size: 2rem;
+  color: #18bc9c;
+}
+
+.order-issuedate {
+  margin-top: 5px;
+}
+
+.shop-name {
+  margin-left: 5px;
+  font-weight: bold;
+}

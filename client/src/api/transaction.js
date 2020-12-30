@@ -8,8 +8,7 @@ export const apiAddTransaction = (reqData) => {
 };
 
 export const apiFetchTransactions = (month) => {
-  let url = 'http://localhost:5000/api/customer/v1/transaction';
-  if (month < 12) url += `/${month}`;
-  console.log(url);
+  let url = 'http://localhost:1337/api/customer/v1/transaction';
+
   return axios.get(url);
 };
