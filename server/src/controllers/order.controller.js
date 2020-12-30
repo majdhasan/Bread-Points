@@ -9,33 +9,23 @@ orderController.create = async (req, res, next) => {
   const shopId = req.shop._id;
 
   const newOrder = new Order({
+    customer: customerId,
     description,
     amount,
     openAmount: amount,
     shop: shopId,
-    customer: customerId,
   });
+
   try {
     const customer = await Customer.findOne({ _id: customerId });
     const shop = await Shop.findOne({ _id: shopId });
-    console.log('customer', customer);
-    console.log('shop', shop);
 
-    if (customer && shop) {
-      const order = await newOrder.save();
-      customer.orders.push(order);
-      shop.orders.push(order);
-      await customer.save();
-      await shop.save();
+    const order = await newOrder.save();
+    customer.orders.push(order);
+    shop.orders.push(order);
+    await shop.save();
 
-      return res.send({ order });
-    } else {
-      const err = new Error(
-        `The Customer with id ${customerId} was not found in our system`,
-      );
-      err.status = 404;
-      return next(err);
-    }
+    return res.send({ order });
   } catch (e) {
     next(e);
   }
@@ -61,6 +51,7 @@ orderController.get = async (req, res, next) => {
 
 orderController.getCustomerOrders = async (req, res, next) => {
   const { customer } = req;
+  const { status } = req.params;
 
   const query = {
     customer: customer._id,
@@ -70,18 +61,15 @@ orderController.getCustomerOrders = async (req, res, next) => {
     // },
   };
 
+  if (status) {
+    query.status = status;
+  }
+
   try {
-    const orders = await Order.find(query).sort({
+    const orders = await Order.find(query).populate('shop').sort({
       created: 'desc',
     });
 
-    if (!orders) {
-      const err = new Error(
-        `The order with id ${orderId} was not found in our system`,
-      );
-      err.status = 404;
-      return next(err);
-    }
     return res.send({ orders });
   } catch (e) {
     next(e);
@@ -89,18 +77,27 @@ orderController.getCustomerOrders = async (req, res, next) => {
 };
 
 orderController.getShopOrders = async (req, res, next) => {
-  const { orderId } = req.body;
+  const { shop } = req;
+  const { status } = req.params;
+
+  const query = {
+    shop: shop._id,
+    // created: {
+    //   $gte: firstDay,
+    //   $lt: lastDay,
+    // },
+  };
+
+  if (status) {
+    query.status = status;
+  }
 
   try {
-    const order = await Order.findById(orderId);
-    if (!order) {
-      const err = new Error(
-        `The order with id ${orderId} was not found in our system`,
-      );
-      err.status = 404;
-      return next(err);
-    }
-    return res.send({ order });
+    const orders = await Order.find(query).sort({
+      created: 'desc',
+    });
+
+    return res.send({ orders });
   } catch (e) {
     next(e);
   }
