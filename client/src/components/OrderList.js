@@ -2,32 +2,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ListGroup } from 'reactstrap';
 
-import { Spinner, TransactionElement } from '.';
+import { Spinner, OrderElement } from '.';
 
-function OrderListComponent({ transactions, fetching }) {
+function OrderListComponent({ orders, fetching }) {
   return (
     <div>
       {fetching && <Spinner />}
 
       <ListGroup>
-        {transactions &&
-          transactions.map((transaction) => {
-            return (
-              <TransactionElement
-                key={transaction._id}
-                transaction={transaction}
-              />
-            );
+        {orders &&
+          orders.map((order) => {
+            return <OrderElement key={order._id} order={order} />;
           })}
       </ListGroup>
     </div>
   );
 }
 
-const mapStateToProps = ({ transaction }) => {
+const mapStateToProps = ({ order }) => {
   return {
-    transactions: transaction.transactions,
-    fetching: transaction.fetching,
+    orders: order.orders,
+    fetching: order.fetching,
   };
 };
 

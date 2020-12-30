@@ -46,6 +46,7 @@ class NavBarComponent extends Component {
           isOpen={this.state.dropdownOpen}
           toggle={this.toggleButton}
         >
+          {profile._id}
           <DropdownToggle
             caret
             color='link'
@@ -81,7 +82,7 @@ class NavBarComponent extends Component {
         <Navbar color='dark' dark expand='md'>
           <Link className='navbar-brand' to='/'>
             <i className='fas fa-coffee logo-coffee'></i>
-            BreadPoints
+            BreadPoints - Customer App
           </Link>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
