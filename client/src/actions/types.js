@@ -17,6 +17,13 @@ export const TRANSACTION_FETCHED = 'TRANSACTION_FETCHED';
 export const TRANSACTION_FETCHING = 'TRANSACTION_FETCHING';
 export const TRANSACTION_FETCHING_FAILED = 'TRANSACTION_FETCHING_FAILED';
 
+// ------------- Order actions --------------
+export const ORDER_SAVED = 'ORDER_SAVED';
+export const ORDER_RESET = 'ORDER_RESET';
+export const ORDER_FETCHED = 'ORDER_FETCHED';
+export const ORDER_FETCHING = 'ORDER_FETCHING';
+export const ORDER_FETCHING_FAILED = 'ORDER_FETCHING_FAILED';
+
 // -------------- Error actions ---------------
 export const ADD_ERROR = 'ADD_ERROR';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
