@@ -27,3 +27,9 @@ export const ORDER_FETCHING_FAILED = 'ORDER_FETCHING_FAILED';
 // -------------- Error actions ---------------
 export const ADD_ERROR = 'ADD_ERROR';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+
+// -------------- Froms actions ---------------
+export const OPEN_CHARGE_BALANCE = 'OPEN_CHARGE_BALANCE';
+export const CLOSE_CHARGE_BALANCE = 'CLOSE_CHARGE_BALANCE';
+export const OPEN_CREATE_ORDER = 'OPEN_CREATE_ORDER';
+export const CLOSE_CREATE_ORDER = 'CLOSE_CREATE_ORDER';
