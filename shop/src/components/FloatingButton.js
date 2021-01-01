@@ -1,34 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from 'reactstrap';
 
-const FloatingButton = ({ onClick }) => {
+import { connect } from 'react-redux';
+import { openAddOrderForm, openChargeBalanceForm } from '../actions';
+
+const FloatingButtonComponent = ({
+  openAddOrderForm,
+  openChargeBalanceForm,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div
       style={{
         position: 'fixed',
-        bottom: 60,
-        right: 60,
-        cursor: 'pointer',
+        bottom: 50,
+        right: 50,
+        boxShadow: '5px 5px 10px #999',
       }}
     >
-      <div
-        style={{
-          borderRadius: 50,
-          width: 60,
-          height: 60,
-          background: '#0a043c',
-          display: 'flex',
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: '#fff',
-          boxShadow: '5px 5px 10px #999',
-        }}
-        onClick={onClick}
-      >
-        <i className='fa fa-plus' />
-      </div>
+      <Dropdown direction='up' isOpen={isOpen} toggle={toggle}>
+        <DropdownToggle color='success'>
+          <i className='fa fa-plus' /> New
+        </DropdownToggle>
+
+        <DropdownMenu>
+          <DropdownItem onClick={openAddOrderForm}>New Order</DropdownItem>
+          <DropdownItem onClick={openChargeBalanceForm}>
+            Charge Balance
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
     </div>
   );
 };
+
+const mapStateToProps = () => {
+  return {};
+};
+
+const FloatingButton = connect(mapStateToProps, {
+  openAddOrderForm,
+  openChargeBalanceForm,
+})(FloatingButtonComponent);
 
 export { FloatingButton };
