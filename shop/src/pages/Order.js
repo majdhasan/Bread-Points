@@ -5,13 +5,11 @@ import {
   TransactionList,
   OrderList,
   MonthSelector,
-  FloatingButton,
 } from '../components';
 
 import { fetchTransactions, fetchOrders } from '../actions';
-import { ChargeBalanceForm } from '../components/ChargeBalanceForm';
 
-class HomeComponent extends Component {
+class OrderComponent extends Component {
   componentDidMount() {
     const { fetchTransactions, fetchOrders } = this.props;
     fetchTransactions();
@@ -19,37 +17,30 @@ class HomeComponent extends Component {
   }
 
   render() {
-    const { profile } = this.props;
     return (
       <div>
-        <h4 style={{ marginTop: 30 }}>Shop name: {profile.name}</h4>
-        <h4 style={{ marginTop: 10 }}>Shop id: {profile._id}</h4>
-
-        <h3 style={{ marginTop: 30 }}>Open Orders</h3>
+        <h3 style={{ marginTop: 30 }}>Order Details</h3>
         <hr />
-        <OrderList />
+
         <h3 style={{ marginTop: 30 }}>Transactions</h3>
         <MonthSelector selected={new Date().getMonth()} />
 
         <hr />
         <TransactionList />
         <CreateOrderForm />
-        <ChargeBalanceForm />
-        <FloatingButton />
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ transaction, auth }) => {
+const mapStateToProps = ({ transaction }) => {
   return {
-    profile: auth.profile,
     transactions: transaction.transactions,
   };
 };
 
-const Home = connect(mapStateToProps, { fetchTransactions, fetchOrders })(
-  HomeComponent,
+const Order = connect(mapStateToProps, { fetchTransactions, fetchOrders })(
+  OrderComponent,
 );
 
-export { Home };
+export { Order };

@@ -14,7 +14,7 @@ function BalanceElement({ balance }) {
           // onClick={handleSubmit}
           color='primary'
         >
-          History
+          Details
         </Button>
       </div>
     </ListGroupItem>

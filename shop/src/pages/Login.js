@@ -80,9 +80,13 @@ class LoginPage extends Component {
                 onClick={handleSubmit}
                 color='primary'
                 block
-                disabled={!isValid || isSubmitting}
+                disabled={!isValid || isSubmitting || this.props.attempting}
               >
-                Sign in
+                {this.props.attempting ? (
+                  <i className='fas fa-circle-notch fa-spin'></i>
+                ) : (
+                  'Sign in'
+                )}
               </Button>
             </div>
           )}

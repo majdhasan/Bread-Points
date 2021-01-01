@@ -80,7 +80,7 @@ class LoginPage extends Component {
                 onClick={handleSubmit}
                 color='primary'
                 block
-                disabled={!isValid || isSubmitting}
+                disabled={attempting || !isValid || isSubmitting}
               >
                 Sign in
               </Button>
