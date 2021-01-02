@@ -28,6 +28,7 @@ class LoginPage extends Component {
   }
 
   render() {
+    const { attempting } = this.props;
     return (
       <div style={{ padding: '20px' }}>
         <h3>Login to your account</h3>

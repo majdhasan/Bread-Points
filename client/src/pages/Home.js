@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  AddForm,
+  NewTransactionForm,
   TransactionList,
   OrderList,
   MonthSelector,
   BalanceList,
+  PayOrderForm,
 } from '../components';
 
 import { fetchTransactions, fetchOrders } from '../actions';
@@ -31,7 +32,8 @@ class HomeComponent extends Component {
         <MonthSelector selected={new Date().getMonth()} />
         <hr />
         <TransactionList />
-        <AddForm />
+        {/* <NewTransactionForm /> */}
+        <PayOrderForm />
       </div>
     );
   }
