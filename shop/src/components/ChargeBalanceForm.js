@@ -16,11 +16,11 @@ import {
 import moment from 'moment';
 
 import {
-  saveTransaction,
   resetTransactionState,
   clearErrors,
   openChargeBalanceForm,
   closeChargeBalanceForm,
+  chargeBalance,
 } from '../actions';
 import { ErrorMessage } from './';
 
@@ -40,10 +40,11 @@ class ChargeBalanceFormComponent extends Component {
     }
   }
   _onSubmit(values, bag) {
-    const { errorMessage } = this.props;
+    const { errorMessage, chargeBalance } = this.props;
     try {
       this.bag = bag;
       // saveTransaction(values);
+      chargeBalance(values);
       bag.setSubmitting(false);
       if (errorMessage === null) {
         this.toggle();
@@ -80,17 +81,17 @@ class ChargeBalanceFormComponent extends Component {
       <div>
         <ErrorMessage />
         <Modal isOpen={modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>
-            Charge Balance To Customer
-          </ModalHeader>
+          <ModalHeader toggle={this.toggle}>Charge Balance</ModalHeader>
           <ModalBody>
             <Formik>
               <Formik
-                initialValues={{ amount: 0, date: now, description: '' }}
+                initialValues={{ amount: 0, customerId: '' }}
                 onSubmit={this._onSubmit.bind(this)}
                 validationSchema={Yup.object().shape({
                   amount: Yup.number().min(1).required(),
-                  date: Yup.date().required(),
+                  customerId: Yup.string().required(
+                    'Customer is a required field',
+                  ),
                 })}
                 render={({
                   handleChange,
@@ -103,6 +104,21 @@ class ChargeBalanceFormComponent extends Component {
                   touched,
                 }) => (
                   <div>
+                    <FormGroup>
+                      <Label for='customerId'>Customer</Label>
+                      <Input
+                        invalid={errors.customerId && touched.customerId}
+                        name='customerId'
+                        type='text'
+                        value={values.customerId}
+                        onChange={handleChange}
+                        placeholder='Customer'
+                        onBlur={handleBlur}
+                      />
+                      {errors.customerId && touched.customerId && (
+                        <FormFeedback>{errors.customerId}</FormFeedback>
+                      )}
+                    </FormGroup>
                     <FormGroup>
                       <Label for='amount'>Amount</Label>
                       <Input
@@ -118,42 +134,13 @@ class ChargeBalanceFormComponent extends Component {
                         <FormFeedback>{errors.amount}</FormFeedback>
                       )}
                     </FormGroup>
-                    <FormGroup>
-                      <Label for='description'>Description</Label>
-                      <Input
-                        invalid={errors.description && touched.description}
-                        name='description'
-                        type='textarea'
-                        value={values.description}
-                        onChange={handleChange}
-                        placeholder='Description'
-                        onBlur={handleBlur}
-                      />
-                      {errors.amount && touched.amount && (
-                        <FormFeedback>{errors.amount}</FormFeedback>
-                      )}
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for='date'>Date</Label>
-                      <Input
-                        invalid={errors.date && touched.date}
-                        name='date'
-                        value={values.date}
-                        type='date'
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        placeholder='Date'
-                      />
-                      {errors.date && touched.date && (
-                        <FormFeedback>{errors.date}</FormFeedback>
-                      )}
-                    </FormGroup>
+
                     <Button
                       onClick={handleSubmit}
                       color='primary'
                       disabled={!isValid || isSubmitting}
                     >
-                      Add
+                      Charge
                     </Button>
                   </div>
                 )}
@@ -174,7 +161,7 @@ const mapStateToProps = ({ error, forms }) => {
 };
 
 const ChargeBalanceForm = connect(mapStateToProps, {
-  saveTransaction,
+  chargeBalance,
   resetTransactionState,
   clearErrors,
   openChargeBalanceForm,

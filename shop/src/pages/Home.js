@@ -25,7 +25,7 @@ class HomeComponent extends Component {
         <h4 style={{ marginTop: 30 }}>Shop name: {profile.name}</h4>
         <h4 style={{ marginTop: 10 }}>Shop id: {profile._id}</h4>
 
-        <h3 style={{ marginTop: 30 }}>Open Orders</h3>
+        <h3 style={{ marginTop: 30 }}>Orders</h3>
         <hr />
         <OrderList />
         <h3 style={{ marginTop: 30 }}>Transactions</h3>

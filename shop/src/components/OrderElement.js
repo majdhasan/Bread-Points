@@ -14,10 +14,10 @@ function OrderElement({ order }) {
         <span style={{ fontSize: 15, color: 'GrayText', marginLeft: 5 }}>
           {status === 'pending' ? (
             'Pending'
-          ) : status === ' paid' ? (
-            <div>
+          ) : status === 'paid' ? (
+            <span>
               <i className='fas fa-check-circle paid-sign'></i>
-            </div>
+            </span>
           ) : (
             'Cancelled'
           )}
