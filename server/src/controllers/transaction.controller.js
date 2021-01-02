@@ -37,6 +37,10 @@ transactionController.create = async (req, res, next) => {
           transactionMembersDetails,
           amount,
         );
+
+        if (chargeCreditToCustomerResponse instanceof Error) {
+          return next(chargeCreditToCustomerResponse);
+        }
         return res.send(chargeCreditToCustomerResponse);
 
       case 'reimbursement':
@@ -45,12 +49,17 @@ transactionController.create = async (req, res, next) => {
       case 'payment':
         transactionMembersDetails.issuer = req.customer._id;
         transactionMembersDetails.issuerModel = 'Customer';
+        console.log(transactionMembersDetails);
+        console.log(req.body);
 
         const payOrderResponse = await payOrder(
           transactionMembersDetails,
           orderId,
           amount,
         );
+        if (payOrderResponse instanceof Error) {
+          return next(payOrderResponse);
+        }
         return res.send(payOrderResponse);
 
       default:
@@ -115,7 +124,7 @@ transactionController.getShopTransactions = async (req, res, next) => {
   }
 };
 
-const chargeCreditToCustomer = async (transactionMembersDetails, credit) => {
+const chargeCreditToCustomer = async (transactionMembersDetails, amount) => {
   /**
    * find receiver and create transaction
    * add transaction to shop and customer profiles
@@ -123,7 +132,7 @@ const chargeCreditToCustomer = async (transactionMembersDetails, credit) => {
    */
 
   const newTransacation = new Transaction({
-    amount: credit,
+    amount,
     type: 'charge',
     ...transactionMembersDetails,
   });
@@ -139,18 +148,18 @@ const chargeCreditToCustomer = async (transactionMembersDetails, credit) => {
     const foundBalanceIndex = customer.balances.findIndex((balance) => {
       return balance.shop.toString() == transactionMembersDetails.issuer;
     });
-    console.log(foundBalanceIndex);
+
     if (typeof foundBalanceIndex !== 'undefined' && foundBalanceIndex !== -1) {
       customer.balances[foundBalanceIndex].amount =
-        customer.balances[foundBalanceIndex].amount + credit;
+        customer.balances[foundBalanceIndex].amount + amount;
     } else {
-      const newBalance = { shop, amount: credit };
+      const newBalance = { shop, amount };
       customer.balances.push(newBalance);
     }
 
     await customer.save();
 
-    const message = `${customer.name} balance from ${shop.name} has been charged with an amount of ${credit}`;
+    const message = `${customer.name} balance from ${shop.name} has been charged with an amount of ${amount}`;
     return { message, transaction };
   } else {
     const err = new Error(
@@ -174,35 +183,43 @@ const payOrder = async (transactionMembersDetails, orderId, amount) => {
   const customer = await Customer.findOne({
     _id: transactionMembersDetails.issuer,
   });
+
   const shop = await Shop.findOne({ _id: order.shop });
+
   const message = '';
   if (order && customer && shop) {
     transactionMembersDetails.receiver = order.shop;
     transactionMembersDetails.receiverModel = 'Shop';
-
+    console.log('transactionMembersDetails', transactionMembersDetails);
     if (amount > order.openAmount) {
       amount = order.openAmount;
       message =
         'The given amount is bigger than the open amount of the order, therfore the amount of the transaction has been modified';
     }
-    const currentCustomerBalance = customer.balance.get(shop.name);
+
+    const foundBalanceIndex = customer.balances.findIndex((balance) => {
+      return balance.shop.toString() == transactionMembersDetails.receiver;
+    });
+
     if (
-      !currentCustomerBalance ||
-      (currentCustomerBalance && currentCustomerBalance < amount)
+      typeof foundBalanceIndex !== 'undefined' &&
+      foundBalanceIndex !== -1 &&
+      customer.balances[foundBalanceIndex].amount >= amount
     ) {
+      customer.balances[foundBalanceIndex].amount -= amount;
+    } else {
       const err = new Error(
         `Your current balance at ${shop.name} is too low to complete the transaction.`,
       );
       err.status = 400;
-      return next(err);
+      return err;
     }
+
     order.openAmount -= amount;
     if (order.openAmount === 0) {
       order.status = 'paid';
       order.paidOn = new Date();
     }
-
-    customer.balance.set(shop.name, currentCustomerBalance - amount);
 
     const newTransacation = new Transaction({
       amount,
@@ -211,7 +228,6 @@ const payOrder = async (transactionMembersDetails, orderId, amount) => {
       ...transactionMembersDetails,
     });
     const transaction = await newTransacation.save();
-    order.transactions.push(transaction);
     await customer.save();
     await order.save();
     return { message, transaction };
@@ -223,54 +239,5 @@ const payOrder = async (transactionMembersDetails, orderId, amount) => {
     return err;
   }
 };
-
-/**
- * expenseController.get = async (req, res, next) => {
-  const { user } = req;
-
-  const now = new Date();
-
-  const month = parseInt(req.params.month);
-  {
-    month >= 0 && month <= 11 && now.setMonth(month);
-  }
-
-  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-  const query = {
-    owner: user._id,
-    created: {
-      $gte: firstDay,
-      $lt: lastDay,
-    },
-  };
-
-  try {
-    const expense = await Expense.find(query).sort({ created: 'desc' });
-    const statistics = {};
-
-    if (expense.length > 0) {
-      //Max amount spent in the specified month
-      statistics.max = expense.sort((a, b) => a.amount < b.amount)[0].amount;
-
-      //Total amount spent in the specified month
-      statistics.total = expense
-        .map((item) => item.amount)
-        .reduce((prev, next) => prev + next);
-
-      //Avg expense for the given month
-      statistics.avg = Math.floor(statistics.total / expense.length);
-    }
-
-    return res.send({
-      expense,
-      statistics,
-    });
-  } catch (e) {
-    next(e);
-  }
-};
- */
 
 module.exports = transactionController;

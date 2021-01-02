@@ -23,7 +23,7 @@ import {
 } from '../actions';
 import { FloatingButton, ErrorMessage } from '.';
 
-class AddFormComponent extends Component {
+class NewTransactionFormComponent extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
@@ -172,10 +172,10 @@ const mapStateToProps = ({ transaction, error }) => {
     errorMessage: error.message,
   };
 };
-const AddForm = connect(mapStateToProps, {
+const NewTransactionForm = connect(mapStateToProps, {
   saveTransaction,
   resetTransactionState,
   clearErrors,
   fetchTransactions,
-})(AddFormComponent);
-export { AddForm };
+})(NewTransactionFormComponent);
+export { NewTransactionForm };

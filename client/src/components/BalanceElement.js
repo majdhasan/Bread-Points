@@ -10,10 +10,7 @@ function BalanceElement({ balance }) {
         <span style={{ marginLeft: 15 }}>{balance.shop.name}</span>
       </div>
       <div className={'float-right'}>
-        <Button
-          // onClick={handleSubmit}
-          color='primary'
-        >
+        <Button color='secondary' size='sm'>
           Details
         </Button>
       </div>

@@ -23,7 +23,17 @@ export const ORDER_RESET = 'ORDER_RESET';
 export const ORDER_FETCHED = 'ORDER_FETCHED';
 export const ORDER_FETCHING = 'ORDER_FETCHING';
 export const ORDER_FETCHING_FAILED = 'ORDER_FETCHING_FAILED';
+export const PAYING_ORDER = 'PAYING_ORDER';
+export const ORDER_PAID = 'ORDER_PAID';
+export const ORDER_PAYING_FAILED = 'ORDER_PAYING_FAILED';
+export const RESET_PAY_ORDER = 'RESET_PAY_ORDER';
 
 // -------------- Error actions ---------------
 export const ADD_ERROR = 'ADD_ERROR';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+
+// -------------- Froms actions ---------------
+export const OPEN_PAY_ORDER = 'OPEN_PAY_ORDER';
+export const CLOSE_PAY_ORDER = 'CLOSE_PAY_ORDER';
+export const OPEN_CREATE_ORDER = 'OPEN_CREATE_ORDER';
+export const CLOSE_CREATE_ORDER = 'CLOSE_CREATE_ORDER';

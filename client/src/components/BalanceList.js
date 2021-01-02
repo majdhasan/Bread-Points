@@ -5,7 +5,6 @@ import { ListGroup } from 'reactstrap';
 import { Spinner, BalanceElement } from '.';
 
 function BalanceListComponent({ balances, fetching }) {
-  console.log(balances);
   return (
     <div>
       {fetching && <Spinner />}

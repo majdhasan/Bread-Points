@@ -25,6 +25,7 @@ export const resetTransactionState = () => {
     dispatch({ type: TRANSACTION_RESET });
   };
 };
+
 export const fetchTransactions = (month = 12) => {
   return async (dispatch) => {
     try {

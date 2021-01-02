@@ -6,6 +6,7 @@ export * from './MonthSelector';
 
 //--------- Forms --------------
 export * from './NewTransactionForm';
+export * from './PayOrderForm';
 
 // ------- Home Components -----
 export * from './Navigation';

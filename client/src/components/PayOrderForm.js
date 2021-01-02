@@ -11,43 +11,43 @@ import {
   Input,
   FormFeedback,
   Label,
-  Alert,
+  Spinner,
 } from 'reactstrap';
-import moment from 'moment';
 
 import {
-  saveTransaction,
-  resetTransactionState,
   clearErrors,
-  fetchTransactions,
+  payOrder,
+  openPayOrdereForm,
+  closePayOrdereForm,
+  resetPayOrder,
 } from '../actions';
-import { FloatingButton, ErrorMessage } from '.';
 
-class AddFormComponent extends Component {
+import { ErrorMessage } from '.';
+
+class PayOrderFormComponent extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = {
-      modal: false,
-    };
   }
 
   toggle() {
-    this.setState({
-      modal: !this.state.modal,
-    });
+    const { modal, openPayOrdereForm, closePayOrdereForm } = this.props;
+
+    if (modal === false) {
+      openPayOrdereForm();
+    } else {
+      closePayOrdereForm();
+    }
   }
 
   _onSubmit(values, bag) {
-    const { saveTransaction, fetchTransactions, errorMessage } = this.props;
+    const { payOrder, errorMessage, orderDetails } = this.props;
     try {
       this.bag = bag;
-      saveTransaction(values);
+      payOrder({ ...values, orderId: orderDetails._id });
       bag.setSubmitting(false);
       if (errorMessage === null) {
-        this.toggle();
         bag.resetForm();
-        fetchTransactions();
       }
     } catch (e) {
       console.log(e);
@@ -56,17 +56,17 @@ class AddFormComponent extends Component {
 
   componentDidUpdate() {
     const {
-      saved,
       errorMessage,
       resetTransactionState,
       clearErrors,
-      fetchTransactions,
+      paid,
+      closePayOrdereForm,
+      resetPayOrder,
     } = this.props;
-    if (saved) {
-      fetchTransactions();
-      setTimeout(() => {
-        resetTransactionState();
-      }, 3000);
+
+    if (paid) {
+      resetPayOrder();
+      closePayOrdereForm();
     }
     if (errorMessage) {
       setTimeout(() => {
@@ -76,24 +76,28 @@ class AddFormComponent extends Component {
   }
 
   render() {
-    const now = moment().format('YYYY-MM-DD');
+    const { modal, orderDetails, paying } = this.props;
     return (
       <div>
         <ErrorMessage />
-        <FloatingButton
-          onClick={this.toggle}
-          content={<i className='fa fa-plus'></i>}
-        ></FloatingButton>
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Pay Order</ModalHeader>
+
+        <Modal isOpen={modal} toggle={this.toggle}>
+          <ModalHeader toggle={this.toggle}>
+            Pay Order - {orderDetails._id}
+          </ModalHeader>
           <ModalBody>
+            <h5>Description: {orderDetails.description}</h5>
+            <h5>Open amount: {orderDetails.openAmount} €</h5>
+            <hr />
             <Formik>
               <Formik
-                initialValues={{ amount: 0, date: now, description: '' }}
+                initialValues={{ amount: 0 }}
                 onSubmit={this._onSubmit.bind(this)}
                 validationSchema={Yup.object().shape({
-                  amount: Yup.number().min(1).required(),
-                  date: Yup.date().required(),
+                  amount: Yup.number()
+                    .min(0.01)
+                    .max(orderDetails.openAmount)
+                    .required(),
                 })}
                 render={({
                   handleChange,
@@ -121,42 +125,12 @@ class AddFormComponent extends Component {
                         <FormFeedback>{errors.amount}</FormFeedback>
                       )}
                     </FormGroup>
-                    <FormGroup>
-                      <Label for='description'>Description</Label>
-                      <Input
-                        invalid={errors.description && touched.description}
-                        name='description'
-                        type='textarea'
-                        value={values.description}
-                        onChange={handleChange}
-                        placeholder='Description'
-                        onBlur={handleBlur}
-                      />
-                      {errors.amount && touched.amount && (
-                        <FormFeedback>{errors.amount}</FormFeedback>
-                      )}
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for='date'>Date</Label>
-                      <Input
-                        invalid={errors.date && touched.date}
-                        name='date'
-                        value={values.date}
-                        type='date'
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        placeholder='Date'
-                      />
-                      {errors.date && touched.date && (
-                        <FormFeedback>{errors.date}</FormFeedback>
-                      )}
-                    </FormGroup>
                     <Button
                       onClick={handleSubmit}
                       color='primary'
-                      disabled={!isValid || isSubmitting}
+                      disabled={!isValid || isSubmitting || paying}
                     >
-                      Add
+                      {paying ? <Spinner /> : 'Pay'}
                     </Button>
                   </div>
                 )}
@@ -169,16 +143,20 @@ class AddFormComponent extends Component {
   }
 }
 
-const mapStateToProps = ({ transaction, error }) => {
+const mapStateToProps = ({ forms, order, error }) => {
   return {
-    saved: transaction.saved,
+    orderDetails: forms.orderDetails,
+    modal: forms.payOrdereModal,
     errorMessage: error.message,
+    paying: order.paying,
+    paid: order.paid,
   };
 };
-const AddForm = connect(mapStateToProps, {
-  saveTransaction,
-  resetTransactionState,
+const PayOrderForm = connect(mapStateToProps, {
   clearErrors,
-  fetchTransactions,
-})(AddFormComponent);
-export { AddForm };
+  closePayOrdereForm,
+  openPayOrdereForm,
+  payOrder,
+  resetPayOrder,
+})(PayOrderFormComponent);
+export { PayOrderForm };
