@@ -11,10 +11,7 @@ function OrderElement({ order }) {
         <Badge color={status == 'paid' ? 'success' : 'primary'}>
           €{amount}
         </Badge>
-        <div>{moment(issuedOn).format('LLLL')}</div>
-      </div>
-      <div className={'float-right'}>
-        <div>
+        <span style={{ fontSize: 15, color: 'GrayText', marginLeft: 5 }}>
           {status === 'pending' ? (
             'Pending'
           ) : status === ' paid' ? (
@@ -24,10 +21,14 @@ function OrderElement({ order }) {
           ) : (
             'Cancelled'
           )}
-        </div>
+        </span>
+        <div style={{ fontSize: 15 }}>{moment(issuedOn).format('LL')}</div>
+      </div>
+      <div className={'float-right'}>
         <Button
           // onClick={handleSubmit}
           color='secondary'
+          size='sm'
         >
           Details
         </Button>
