@@ -15,6 +15,7 @@ const CustomerSchema = Schema({
   password: { type: String, require: true },
   balances: [BalanceSchema],
   transactions: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
+  favouriteShops: [{ type: Schema.Types.ObjectId, ref: 'Shop' }],
   orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
   joined: { type: Date, default: new Date() },
 });
