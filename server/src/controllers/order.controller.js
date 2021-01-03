@@ -51,14 +51,10 @@ orderController.get = async (req, res, next) => {
 
 orderController.getCustomerOrders = async (req, res, next) => {
   const { customer } = req;
-  const { status } = req.params;
+  const { status } = req.query;
 
   const query = {
     customer: customer._id,
-    // created: {
-    //   $gte: firstDay,
-    //   $lt: lastDay,
-    // },
   };
 
   if (status) {
@@ -67,7 +63,7 @@ orderController.getCustomerOrders = async (req, res, next) => {
 
   try {
     const orders = await Order.find(query).populate('shop').sort({
-      created: 'desc',
+      issuedOn: 'desc',
     });
 
     return res.send({ orders });
@@ -78,14 +74,10 @@ orderController.getCustomerOrders = async (req, res, next) => {
 
 orderController.getShopOrders = async (req, res, next) => {
   const { shop } = req;
-  const { status } = req.params;
+  const { status } = req.query;
 
   const query = {
     shop: shop._id,
-    // created: {
-    //   $gte: firstDay,
-    //   $lt: lastDay,
-    // },
   };
 
   if (status) {
@@ -94,7 +86,7 @@ orderController.getShopOrders = async (req, res, next) => {
 
   try {
     const orders = await Order.find(query).sort({
-      created: 'desc',
+      issuedOn: 'desc',
     });
 
     return res.send({ orders });

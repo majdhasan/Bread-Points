@@ -9,7 +9,7 @@ const OrderSchema = Schema({
   customer: { type: Schema.Types.ObjectId, ref: 'Customer' },
   /**
    * status:
-   * pending, paid, canceled
+   * pending, paid, cancelled
    */
   status: { type: String, default: 'pending' },
   issuedOn: { type: Date, default: new Date() },
