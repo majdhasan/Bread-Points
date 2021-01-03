@@ -29,7 +29,7 @@ const FloatingButtonComponent = ({
       }}
     >
       <Dropdown direction='up' isOpen={isOpen} toggle={toggle}>
-        <DropdownToggle color='success'>
+        <DropdownToggle color='primary'>
           <i className='fa fa-plus' /> New
         </DropdownToggle>
 

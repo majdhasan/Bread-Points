@@ -6,10 +6,12 @@ import {
   OrderList,
   MonthSelector,
   FloatingButton,
+  ErrorMessage,
 } from '../components';
 
 import { fetchTransactions, fetchOrders } from '../actions';
 import { ChargeBalanceForm } from '../components/ChargeBalanceForm';
+import { OrdersFilter } from '../components/OrdersFilter';
 
 class HomeComponent extends Component {
   componentDidMount() {
@@ -24,8 +26,10 @@ class HomeComponent extends Component {
       <div>
         <h4 style={{ marginTop: 30 }}>Shop name: {profile.name}</h4>
         <h4 style={{ marginTop: 10 }}>Shop id: {profile._id}</h4>
+        <ErrorMessage />
 
         <h3 style={{ marginTop: 30 }}>Orders</h3>
+        <OrdersFilter />
         <hr />
         <OrderList />
         <h3 style={{ marginTop: 30 }}>Transactions</h3>

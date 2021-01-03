@@ -12,7 +12,7 @@ const INITIAL_STATE = {
   error: null,
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case AUTH_ATTEMPTING:
       return { ...state, attempting: true, isAuth: false, error: null };
@@ -33,3 +33,4 @@ export default (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+export default reducer;

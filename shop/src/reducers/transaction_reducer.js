@@ -12,7 +12,7 @@ const INITIAL_STATE = {
   fetching: false,
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case TRANSACTION_SAVED:
       return { ...state, saved: true };
@@ -28,3 +28,5 @@ export default (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+
+export default reducer;

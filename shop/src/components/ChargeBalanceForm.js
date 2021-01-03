@@ -11,9 +11,7 @@ import {
   Input,
   FormFeedback,
   Label,
-  Alert,
 } from 'reactstrap';
-import moment from 'moment';
 
 import {
   resetTransactionState,
@@ -43,7 +41,6 @@ class ChargeBalanceFormComponent extends Component {
     const { errorMessage, chargeBalance } = this.props;
     try {
       this.bag = bag;
-      // saveTransaction(values);
       chargeBalance(values);
       bag.setSubmitting(false);
       if (errorMessage === null) {
@@ -76,10 +73,8 @@ class ChargeBalanceFormComponent extends Component {
 
   render() {
     const { modal } = this.props;
-    const now = moment().format('YYYY-MM-DD');
     return (
       <div>
-        <ErrorMessage />
         <Modal isOpen={modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Charge Balance</ModalHeader>
           <ModalBody>

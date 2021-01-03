@@ -11,7 +11,6 @@ import {
   Input,
   FormFeedback,
   Label,
-  Alert,
 } from 'reactstrap';
 import moment from 'moment';
 
@@ -23,8 +22,6 @@ import {
   openAddOrderForm,
   closeAddOrderForm,
 } from '../actions';
-
-import { FloatingButton, ErrorMessage } from '.';
 
 class CreateOrderFormComponent extends Component {
   /**
@@ -89,7 +86,6 @@ class CreateOrderFormComponent extends Component {
     const now = moment().format('YYYY-MM-DD');
     return (
       <div>
-        <ErrorMessage />
         <Modal isOpen={this.props.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>New Order</ModalHeader>
           <ModalBody>
