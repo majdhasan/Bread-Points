@@ -25,14 +25,13 @@ export const resetOrderState = () => {
     dispatch({ type: ORDER_RESET });
   };
 };
-export const fetchOrders = () => {
+export const fetchOrders = (filters = {}) => {
   return async (dispatch) => {
     try {
       dispatch({ type: ORDER_FETCHING });
       const {
         data: { orders },
-      } = await apiFetchOrders();
-      console.log(orders);
+      } = await apiFetchOrders(filters);
       dispatch({ type: ORDER_FETCHED, payload: orders });
     } catch (e) {
       dispatch({ type: ORDER_FETCHING_FAILED });

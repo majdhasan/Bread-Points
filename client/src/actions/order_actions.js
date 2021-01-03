@@ -24,13 +24,13 @@ export const resetPayOrder = () => {
   };
 };
 
-export const fetchOrders = () => {
+export const fetchOrders = (status = '') => {
   return async (dispatch) => {
     try {
       dispatch({ type: ORDER_FETCHING });
       const {
         data: { orders },
-      } = await apiFetchOrders();
+      } = await apiFetchOrders(status);
       dispatch({ type: ORDER_FETCHED, payload: orders });
     } catch (e) {
       dispatch({ type: ORDER_FETCHING_FAILED });

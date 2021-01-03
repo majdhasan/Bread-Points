@@ -16,5 +16,6 @@ export * from './BalanceList';
 export * from './OrderElement';
 export * from './BalanceElement';
 export * from './TransactionElement';
+export * from './OrdersFilter';
 
 export * from './FloatingButton';

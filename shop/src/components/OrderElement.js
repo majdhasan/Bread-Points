@@ -8,7 +8,7 @@ function OrderElement({ order }) {
   return (
     <ListGroupItem>
       <div style={{ fontSize: 20 }} className={'float-left'}>
-        <Badge color={status == 'paid' ? 'success' : 'primary'}>
+        <Badge color={status === 'paid' ? 'success' : 'primary'}>
           €{amount}
         </Badge>
         <span style={{ fontSize: 15, color: 'GrayText', marginLeft: 5 }}>
@@ -26,8 +26,9 @@ function OrderElement({ order }) {
       </div>
       <div className={'float-right'}>
         <Button
+          outline
           // onClick={handleSubmit}
-          color='secondary'
+          color='primary'
           size='sm'
         >
           Details

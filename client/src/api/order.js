@@ -7,9 +7,9 @@ import axios from 'axios';
 //   );
 // };
 
-export const apiFetchOrders = () => {
+export const apiFetchOrders = (status) => {
   let url = 'http://localhost:1337/api/customer/v1/order';
-
+  status !== '' && (url += `?status=${status}`);
   return axios.get(url);
 };
 
