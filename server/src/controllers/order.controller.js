@@ -74,17 +74,21 @@ orderController.getCustomerOrders = async (req, res, next) => {
 
 orderController.getShopOrders = async (req, res, next) => {
   const { shop } = req;
-  const { status } = req.query;
+  const { status, customer } = req.query;
 
   const query = {
     shop: shop._id,
   };
 
-  if (status) {
-    query.status = status;
-  }
-
   try {
+    if (status) {
+      query.status = status;
+    }
+
+    if (customer) {
+      const foundCustomer = await Customer.findOne({ _id: customer });
+      foundCustomer && (query.customer = customer);
+    }
     const orders = await Order.find(query).sort({
       issuedOn: 'desc',
     });
